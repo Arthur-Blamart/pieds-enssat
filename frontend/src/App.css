@@ -50,22 +50,47 @@ body, #root {
 
 /* Responsive styles */
 @media (max-width: 600px) {
-  #root {
-    padding: 0.5rem;
+  #root, .container {
+    padding: 0.5rem !important;
+    min-width: 0;
+    width: 100vw;
   }
   .logo {
     height: 3em;
     padding: 0.5em;
   }
   input, button {
-    width: 90vw !important;
-    font-size: 1rem !important;
+    width: 95vw !important;
+    font-size: 1.1rem !important;
     min-width: 0;
     max-width: 100vw;
+    box-sizing: border-box;
   }
-  img {
-    max-width: 90vw !important;
+  img, .photo {
+    max-width: 95vw !important;
     height: auto !important;
+    margin: 0 auto 1rem auto !important;
+    display: block;
+  }
+  h1 {
+    font-size: 1.3rem !important;
+    text-align: center;
+    margin: 1rem 0 0.5rem 0;
+  }
+  .bouton {
+    font-size: 1.1rem !important;
+    padding: 0.7rem 1.2rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  .champ {
+    font-size: 1.1rem !important;
+    padding: 0.7rem !important;
+    margin-bottom: 0.7rem !important;
+  }
+  .container {
+    width: 100vw !important;
+    min-width: 0;
+    margin: 0;
   }
 }
 

@@ -1,3 +1,19 @@
+const fs = require('fs');
+const multer = require('multer');
+// Création du dossier depot si besoin
+const depot = path.join(__dirname, 'depot');
+if (!fs.existsSync(depot)) {
+  fs.mkdirSync(depot);
+}
+const upload = multer({ dest: depot });
+// Route pour recevoir les photos et le nom
+app.post('/upload', upload.single('photo'), (req, res) => {
+  // req.file contient la photo, req.body.nom le nom
+  if (!req.file || !req.body.nom) {
+    return res.status(400).json({ success: false, message: 'Photo ou nom manquant' });
+  }
+  res.json({ success: true, filename: req.file.filename, originalname: req.file.originalname, nom: req.body.nom });
+});
 const { getAllFeet, getRandomFeet } = require('./traitements');
 const path = require('path');
 const express = require('express');

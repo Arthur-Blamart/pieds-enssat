@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+
+import { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
   const [answer, setAnswer] = useState("");
@@ -9,21 +9,38 @@ function App() {
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
+  const [prenom, setPrenom] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Récupère une photo et le prénom à deviner
+  const fetchRandomFoot = async () => {
+    setLoading(true);
+    setMessage("");
+    setAnswer("");
+    try {
+      const res = await fetch("https://pieds-enssat.onrender.com/pieds/random");
+      const data = await res.json();
+      setPhotoUrl(data.url_image);
+      setPrenom(data.nom.split(" ")[0].toLowerCase());
+    } catch (e) {
+      setMessage("Erreur lors du chargement de la photo.");
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    if (page === "jeu") {
-      fetch("https://pieds-enssat-production.up.railway.app/pieds/random")
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.url_image) {
-            setPhotoUrl(data.url_image);
-          } else {
-            setPhotoUrl(null);
-          }
-        })
-        .catch(() => setPhotoUrl(null));
-    }
+    if (page === "jeu") fetchRandomFoot();
   }, [page]);
+
+  const handleValidation = (e) => {
+    e.preventDefault();
+    if (answer.trim().toLowerCase() === prenom) {
+      setMessage("Bravo, bonne réponse !");
+    } else {
+      setMessage("Mauvaise réponse, essaie encore !");
+    }
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: "#5c6f6f" }}>
@@ -42,18 +59,27 @@ function App() {
       {/* Contenu selon la page */}
       {page === "jeu" && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-          {photoUrl ? (
-            <img src={photoUrl} alt="Qui est sur la photo ?" style={{ maxWidth: "300px", marginBottom: "2rem", borderRadius: "30px", boxShadow: "0 4px 16px rgba(191,162,76,0.15)" }} />
-          ) : (
+          {loading ? (
             <div style={{ width: "300px", height: "300px", display: "flex", alignItems: "center", justifyContent: "center", background: "#eee", borderRadius: "30px", marginBottom: "2rem" }}>Chargement...</div>
+          ) : (
+            photoUrl && (
+              <img src={photoUrl} alt="Qui est sur la photo ?" style={{ maxWidth: "300px", marginBottom: "2rem", borderRadius: "30px", boxShadow: "0 4px 16px rgba(191,162,76,0.15)" }} />
+            )
           )}
           <h1 style={{ color: "#bfa24c", marginBottom: "1rem" }}>À qui appartiennent les pieds ?</h1>
-          <input
-            type="text"
-            value={answer}
-            onChange={e => setAnswer(e.target.value)}
-            style={{ padding: "0.5rem", fontSize: "1.2rem", width: "250px", textAlign: "center", borderRadius: "8px", border: "2px solid #bfa24c", marginBottom: "1rem", color: "#5c6f6f", background: "#fff" }}
-          />
+          <form onSubmit={handleValidation} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <input
+              type="text"
+              value={answer}
+              onChange={e => setAnswer(e.target.value)}
+              style={{ padding: "0.5rem", fontSize: "1.2rem", width: "250px", textAlign: "center", borderRadius: "8px", border: "2px solid #bfa24c", marginBottom: "1rem", color: "#5c6f6f", background: "#fff" }}
+              placeholder="Devine le prénom"
+            />
+            <button type="submit" style={{ padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#bfa24c", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}>Valider</button>
+          </form>
+          <div style={{ margin: "10px", minHeight: "24px", fontWeight: "bold", fontSize: "1.3rem", color: message === "Bravo, bonne réponse !" ? "#1db954" : message ? "#d90429" : undefined }}>
+            {message}
+          </div>
         </div>
       )}
 
@@ -79,12 +105,52 @@ function App() {
           {preview && (
             <img src={preview} alt="Aperçu" style={{ maxWidth: "300px", marginBottom: "1rem", borderRadius: "16px", boxShadow: "0 2px 8px rgba(191,162,76,0.15)" }} />
           )}
-          <input type="text" placeholder="Votre nom" style={{ padding: "0.5rem", fontSize: "1.2rem", width: "250px", textAlign: "center", marginBottom: "1rem", borderRadius: "8px", border: "2px solid #bfa24c", color: "#5c6f6f", background: "#fff" }} />
-          <button style={{ padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#bfa24c", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}>Envoyer</button>
+          <input
+            type="text"
+            placeholder="Votre nom"
+            value={answer}
+            onChange={e => setAnswer(e.target.value)}
+            style={{ padding: "0.5rem", fontSize: "1.2rem", width: "250px", textAlign: "center", marginBottom: "1rem", borderRadius: "8px", border: "2px solid #bfa24c", color: "#5c6f6f", background: "#fff" }}
+          />
+          <button
+            style={{ padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#bfa24c", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}
+            onClick={async (e) => {
+              e.preventDefault();
+              setMessage("");
+              if (!file || !answer.trim()) {
+                setMessage("Merci de choisir une photo et d'indiquer votre nom.");
+                return;
+              }
+              const formData = new FormData();
+              formData.append("photo", file);
+              formData.append("nom", answer.trim());
+              try {
+                const res = await fetch("https://pieds-enssat.onrender.com/upload", {
+                  method: "POST",
+                  body: formData
+                });
+                if (res.ok) {
+                  setMessage("Photo envoyée avec succès ! Merci.");
+                  setFile(null);
+                  setPreview(null);
+                  setAnswer("");
+                } else {
+                  setMessage("Erreur lors de l'envoi. Réessayez plus tard.");
+                }
+              } catch (err) {
+                setMessage("Erreur lors de l'envoi. Réessayez plus tard.");
+              }
+            }}
+          >
+            Envoyer
+          </button>
+          <div style={{ margin: "10px", minHeight: "24px", fontWeight: "bold", fontSize: "1.1rem", color: message === "Photo envoyée avec succès ! Merci." ? "#1db954" : message ? "#d90429" : undefined }}>
+            {message}
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-export default App
+export default App;
