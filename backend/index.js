@@ -3,8 +3,10 @@ const path = require('path');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Swagger definition

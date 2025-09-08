@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -8,8 +8,20 @@ function App() {
   const [page, setPage] = useState("jeu");
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
-  // Remplacez le chemin par votre image réelle si besoin
-  const photoUrl = "https://junior-enssat-services.fr/wp-content/uploads/2023/08/cropped-JES-rond.png";
+  const [photoUrl, setPhotoUrl] = useState(null);
+
+  useEffect(() => {
+    if (page === "jeu") {
+      fetch("https://pieds-enssat.onrender.com/pieds/random")
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.photoUrl) {
+            setPhotoUrl(data.photoUrl);
+          }
+        })
+        .catch(() => setPhotoUrl(null));
+    }
+  }, [page]);
 
   return (
     <div style={{ minHeight: "100vh", background: "#5c6f6f" }}>
@@ -28,7 +40,11 @@ function App() {
       {/* Contenu selon la page */}
       {page === "jeu" && (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-          <img src={photoUrl} alt="Qui est sur la photo ?" style={{ maxWidth: "300px", marginBottom: "2rem", borderRadius: "30px", boxShadow: "0 4px 16px rgba(191,162,76,0.15)" }} />
+          {photoUrl ? (
+            <img src={photoUrl} alt="Qui est sur la photo ?" style={{ maxWidth: "300px", marginBottom: "2rem", borderRadius: "30px", boxShadow: "0 4px 16px rgba(191,162,76,0.15)" }} />
+          ) : (
+            <div style={{ width: "300px", height: "300px", display: "flex", alignItems: "center", justifyContent: "center", background: "#eee", borderRadius: "30px", marginBottom: "2rem" }}>Chargement...</div>
+          )}
           <h1 style={{ color: "#bfa24c", marginBottom: "1rem" }}>À qui appartiennent les pieds ?</h1>
           <input
             type="text"
