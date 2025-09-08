@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     if (page === "jeu") {
-      fetch("https://pieds-enssat.onrender.com/pieds/random")
+      fetch("https://pieds-enssat-production.up.railway.app/pieds/random")
         .then(res => res.json())
         .then(data => {
           if (data && data.url_image) {
