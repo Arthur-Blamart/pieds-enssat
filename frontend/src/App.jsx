@@ -15,8 +15,10 @@ function App() {
       fetch("https://pieds-enssat.onrender.com/pieds/random")
         .then(res => res.json())
         .then(data => {
-          if (data && data.photoUrl) {
-            setPhotoUrl(data.photoUrl);
+          if (data && data.url_image) {
+            setPhotoUrl(data.url_image);
+          } else {
+            setPhotoUrl(null);
           }
         })
         .catch(() => setPhotoUrl(null));
