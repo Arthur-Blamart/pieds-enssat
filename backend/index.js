@@ -1,21 +1,79 @@
+/**
+ * @swagger
+ * /pieds:
+ *   get:
+ *     summary: Obtenir la liste de tous les pieds
+ *     responses:
+ *       200:
+ *         description: Liste de tous les pieds
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
+app.get('/pieds', (req, res) => {
+  try {
+    const pieds = getAllFeet();
+    // Ajoute une URL d'accès à l'image si le champ chemin existe
+    const piedsAvecUrl = pieds.map(pied => pied.chemin ? { ...pied, url_image: `${req.protocol}://${req.get('host')}/${pied.chemin}` } : pied);
+    res.json(piedsAvecUrl);
+  } catch (e) {
+    res.status(500).json({ error: 'Erreur lors de la récupération des pieds.' });
+  }
+});
 const fs = require('fs');
+const path = require('path');
 const multer = require('multer');
 // Création du dossier depot si besoin
 const depot = path.join(__dirname, 'depot');
 if (!fs.existsSync(depot)) {
   fs.mkdirSync(depot);
 }
-const upload = multer({ dest: depot });
-// Route pour recevoir les photos et le nom
-app.post('/upload', upload.single('photo'), (req, res) => {
-  // req.file contient la photo, req.body.nom le nom
-  if (!req.file || !req.body.nom) {
-    return res.status(400).json({ success: false, message: 'Photo ou nom manquant' });
+// Multer avec nom de fichier explicite (timestamp-nomoriginal)
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, depot);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_");
+    const ts = Date.now();
+    cb(null, `${ts}_${base}${ext}`);
   }
-  res.json({ success: true, filename: req.file.filename, originalname: req.file.originalname, nom: req.body.nom });
 });
+const upload = multer({ storage });
+
+// Route pour recevoir un objet JSON { nom: string, photo: base64 }
+app.post('/upload', async (req, res) => {
+  try {
+    const { nom, photo } = req.body;
+    if (!nom || !photo) {
+      return res.status(400).json({ success: false, message: 'Photo ou nom manquant' });
+    }
+    // photo doit être une string base64 (ex: data:image/jpeg;base64,...)
+    const matches = photo.match(/^data:(image\/(jpeg|png|jpg));base64,(.+)$/);
+    if (!matches) {
+      return res.status(400).json({ success: false, message: 'Format de photo non supporté (attendu: base64 data url)' });
+    }
+    const ext = matches[2] === 'jpeg' ? '.jpg' : '.' + matches[2];
+    const base64Data = matches[3];
+    const ts = Date.now();
+    const safeNom = nom.replace(/[^a-zA-Z0-9_-]/g, '_');
+    const nomFichier = `${ts}_${safeNom}${ext}`;
+    const filePath = path.join(depot, nomFichier);
+    fs.writeFileSync(filePath, Buffer.from(base64Data, 'base64'));
+    // Stocker le nom dans un .txt à côté
+    const metaPath = path.join(depot, nomFichier + '.txt');
+    fs.writeFileSync(metaPath, nom, 'utf8');
+    res.json({ success: true, filename: nomFichier, nom });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Erreur lors de l\'enregistrement', error: err.message });
+  }
+});
+
 const { getAllFeet, getRandomFeet } = require('./traitements');
-const path = require('path');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
