@@ -1,0 +1,11 @@
+{
+    "pieds": [
+        { "id": 1, "nom": "Alexandre MARTIN-LEFEVRE", "chemin": "pieds/photos/AlexandreML.jpg" },
+        { "id": 2, "nom": "Arthur BLAMART", "chemin": "pieds/photos/ArthurB.jpg" },
+        { "id": 3, "nom": "Dimitri BASTARDIE", "chemin": "pieds/photos/DimitriB.jpg" },
+        { "id": 4, "nom": "Ethan GEFFROY", "chemin": "pieds/photos/EthanG.jpg" },
+        { "id": 5, "nom": "Gwenael BAZILE", "chemin": "pieds/photos/Gwenael.jpg" },
+        { "id": 6, "nom": "Jules GOBILLOT", "chemin": "pieds/photos/JulesG.jpg" },
+        { "id": 7, "nom": "Sean SWIDURSKI", "chemin": "pieds/photos/Sean.jpg" }
+    ]
+}
