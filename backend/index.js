@@ -1,3 +1,34 @@
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Création du dossier depot si besoin
+const depot = path.join(__dirname, 'depot');
+if (!fs.existsSync(depot)) {
+  fs.mkdirSync(depot);
+}
+// Multer avec nom de fichier explicite (timestamp-nomoriginal)
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, depot);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_");
+    const ts = Date.now();
+    cb(null, `${ts}_${base}${ext}`);
+  }
+});
+const upload = multer({ storage });
+
 /**
  * @swagger
  * /pieds:
@@ -23,27 +54,6 @@ app.get('/pieds', (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la récupération des pieds.' });
   }
 });
-const fs = require('fs');
-const path = require('path');
-const multer = require('multer');
-// Création du dossier depot si besoin
-const depot = path.join(__dirname, 'depot');
-if (!fs.existsSync(depot)) {
-  fs.mkdirSync(depot);
-}
-// Multer avec nom de fichier explicite (timestamp-nomoriginal)
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, depot);
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const base = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, "_");
-    const ts = Date.now();
-    cb(null, `${ts}_${base}${ext}`);
-  }
-});
-const upload = multer({ storage });
 
 // Route pour recevoir un objet JSON { nom: string, photo: base64 }
 app.post('/upload', async (req, res) => {
@@ -74,14 +84,6 @@ app.post('/upload', async (req, res) => {
 });
 
 const { getAllFeet, getRandomFeet } = require('./traitements');
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
-const cors = require('cors');
-
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 // Swagger definition
 const swaggerDefinition = {
