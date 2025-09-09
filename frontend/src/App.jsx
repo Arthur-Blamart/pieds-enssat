@@ -62,48 +62,53 @@ function App() {
 
       {/* Contenu selon la page */}
       {page === "jeu" && (
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-          {loading ? (
-            <div style={{ width: "300px", height: "300px", display: "flex", alignItems: "center", justifyContent: "center", background: "#eee", borderRadius: "30px", marginBottom: "2rem" }}>Chargement...</div>
-          ) : (
-            photoUrl && (
-              <img src={photoUrl} alt="Qui est sur la photo ?" style={{ maxWidth: "300px", marginBottom: "2rem", borderRadius: "30px", boxShadow: "0 4px 16px rgba(191,162,76,0.15)" }} />
-            )
-          )}
-          <h1 style={{ color: "#bfa24c", marginBottom: "1rem" }}>À qui appartiennent les pieds ?</h1>
-          <form onSubmit={handleValidation} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <input
-              type="text"
-              value={answer}
-              onChange={e => setAnswer(e.target.value)}
-              style={{ padding: "0.5rem", fontSize: "1.2rem", width: "250px", textAlign: "center", borderRadius: "8px", border: "2px solid #bfa24c", marginBottom: "1rem", color: "#5c6f6f", background: "#fff" }}
-              placeholder="Devine le prénom"
-            />
-            <button type="submit" style={{ padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#bfa24c", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}>Valider</button>
-          </form>
-          <button
-            style={{ marginTop: "1rem", padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#5c6f6f", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}
-            onClick={() => {
-              if (indice) {
-                console.log('>>> Bouton indice pressé, valeur de l\'indice :', indice);
-                setShowIndice(true);
-              } else {
-                console.log('>>> Bouton indice pressé, mais aucun indice disponible');
-              }
-            }}
-            disabled={!indice}
-          >
-            {showIndice ? "Indice révélé" : "Révéler l'indice"}
-          </button>
-          <div style={{ minHeight: "24px" }}>
-            {showIndice && indice && (
-              <div style={{ margin: "10px", fontWeight: "bold", fontSize: "1.1rem", color: "#bfa24c" }}>
-                Indice : {indice}
-              </div>
+        <div style={{ position: "relative", display: "flex", flexDirection: "row", alignItems: "flex-start", justifyContent: "center", minHeight: "70vh" }}>
+          {/* Colonne principale */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
+            {loading ? (
+              <div style={{ width: "300px", height: "300px", display: "flex", alignItems: "center", justifyContent: "center", background: "#eee", borderRadius: "30px", marginBottom: "2rem" }}>Chargement...</div>
+            ) : (
+              photoUrl && (
+                <img src={photoUrl} alt="Qui est sur la photo ?" style={{ maxWidth: "300px", marginBottom: "2rem", borderRadius: "30px", boxShadow: "0 4px 16px rgba(191,162,76,0.15)" }} />
+              )
             )}
+            <h1 style={{ color: "#bfa24c", marginBottom: "1rem" }}>À qui appartiennent les pieds ?</h1>
+            <form onSubmit={handleValidation} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <input
+                type="text"
+                value={answer}
+                onChange={e => setAnswer(e.target.value)}
+                style={{ padding: "0.5rem", fontSize: "1.2rem", width: "250px", textAlign: "center", borderRadius: "8px", border: "2px solid #bfa24c", marginBottom: "1rem", color: "#5c6f6f", background: "#fff" }}
+                placeholder="Devine le prénom"
+              />
+              <button type="submit" style={{ padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#bfa24c", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}>Valider</button>
+            </form>
+            <div style={{ margin: "10px", minHeight: "24px", fontWeight: "bold", fontSize: "1.3rem", color: message === "Bravo, bonne réponse !" ? "#1db954" : message ? "#d90429" : undefined }}>
+              {message}
+            </div>
           </div>
-          <div style={{ margin: "10px", minHeight: "24px", fontWeight: "bold", fontSize: "1.3rem", color: message === "Bravo, bonne réponse !" ? "#1db954" : message ? "#d90429" : undefined }}>
-            {message}
+          {/* Panneau indice à droite */}
+          <div style={{ minWidth: "220px", marginLeft: "2rem", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+            <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "0 2px 8px rgba(191,162,76,0.15)", padding: "1rem", minWidth: "180px", minHeight: "80px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <button
+                style={{ marginBottom: "0.5rem", padding: "0.5rem 1.2rem", fontSize: "1.05rem", borderRadius: "8px", background: "#5c6f6f", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold", width: "100%" }}
+                onClick={() => {
+                  if (indice) {
+                    setShowIndice(true);
+                  }
+                }}
+                disabled={!indice}
+              >
+                {showIndice ? "Indice révélé" : "Révéler l'indice"}
+              </button>
+              <div style={{ minHeight: "24px", width: "100%", textAlign: "center" }}>
+                {showIndice && indice && (
+                  <div style={{ margin: "10px 0 0 0", fontWeight: "bold", fontSize: "1.1rem", color: "#bfa24c" }}>
+                    Indice : {indice}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
