@@ -10,6 +10,8 @@ function App() {
   const [file, setFile] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
   const [prenom, setPrenom] = useState("");
+  const [indice, setIndice] = useState("");
+  const [showIndice, setShowIndice] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,11 +20,13 @@ function App() {
     setLoading(true);
     setMessage("");
     setAnswer("");
+    setShowIndice(false);
     try {
       const res = await fetch("https://pieds-enssat.onrender.com/pieds/random");
       const data = await res.json();
       setPhotoUrl(data.url_image);
       setPrenom(data.nom.split(" ")[0].toLowerCase());
+      setIndice(data.indice || "");
     } catch (e) {
       setMessage("Erreur lors du chargement de la photo.");
     }
@@ -77,6 +81,27 @@ function App() {
             />
             <button type="submit" style={{ padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#bfa24c", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}>Valider</button>
           </form>
+          <button
+            style={{ marginTop: "1rem", padding: "0.5rem 1.5rem", fontSize: "1.1rem", borderRadius: "8px", background: "#5c6f6f", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold" }}
+            onClick={() => {
+              if (indice) {
+                console.log('>>> Bouton indice pressé, valeur de l\'indice :', indice);
+                setShowIndice(true);
+              } else {
+                console.log('>>> Bouton indice pressé, mais aucun indice disponible');
+              }
+            }}
+            disabled={!indice}
+          >
+            {showIndice ? "Indice révélé" : "Révéler l'indice"}
+          </button>
+          <div style={{ minHeight: "24px" }}>
+            {showIndice && indice && (
+              <div style={{ margin: "10px", fontWeight: "bold", fontSize: "1.1rem", color: "#bfa24c" }}>
+                Indice : {indice}
+              </div>
+            )}
+          </div>
           <div style={{ margin: "10px", minHeight: "24px", fontWeight: "bold", fontSize: "1.3rem", color: message === "Bravo, bonne réponse !" ? "#1db954" : message ? "#d90429" : undefined }}>
             {message}
           </div>

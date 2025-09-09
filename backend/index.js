@@ -153,6 +153,10 @@ app.get('/pieds/random', (req, res) => {
   if (pied.chemin) {
     piedAvecUrl.url_image = `${req.protocol}://${req.get('host')}/${pied.chemin}`;
   }
+  // Ajoute l'indice (indice1) sous le nom 'indice' si présent
+  if (pied.indice1) {
+    piedAvecUrl.indice = pied.indice1;
+  }
   res.json(piedAvecUrl);
 });
 
