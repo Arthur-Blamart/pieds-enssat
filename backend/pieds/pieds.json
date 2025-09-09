@@ -1,12 +1,12 @@
 {
     "pieds": [
-        { "id": 1, "nom": "Sean SWIDURSKI", "chemin": "pieds/photos/Sean.jpg", "indice1": "2 année" },
-        { "id": 2, "nom": "Arthur BLAMART", "chemin": "pieds/photos/ArthurB.jpg", "indice1": "2e année" },
-        { "id": 3, "nom": "Dimitri BASTARDIE", "chemin": "pieds/photos/DimitriB.jpg", "indice1": "2e année" },
-        { "id": 4, "nom": "Ethan GEFFROY", "chemin": "pieds/photos/EthanG.jpg", "indice1": "2e année" },
-        { "id": 5, "nom": "Gwenael BAZILE", "chemin": "pieds/photos/Gwenael.jpg", "indice1": "3e année" },
-        { "id": 6, "nom": "Jules GOBILLOT", "chemin": "pieds/photos/JulesG.jpg", "indice1": "3e année" },
-        { "id": 7, "nom": "Gabin BEAUFORT", "chemin": "pieds/photos/GabinB.jpg", "indice1": "3e année" },
-        { "id": 8, "nom": "Guirec CHEVREL", "chemin": "pieds/photos/GuirecC.jpg", "indice1": "2e année" }
+        { "id": 1, "nom": "Sean SWIDURSKI", "chemin": "pieds/photos/Sean.jpg", "indice1": "2 année", "indice2": "PHOT" },
+        { "id": 2, "nom": "Arthur BLAMART", "chemin": "pieds/photos/ArthurB.jpg", "indice1": "2e année", "indice2": "INFO" },
+        { "id": 3, "nom": "Dimitri BASTARDIE", "chemin": "pieds/photos/DimitriB.jpg", "indice1": "2e année", "indice2": "INFO" },
+        { "id": 4, "nom": "Ethan GEFFROY", "chemin": "pieds/photos/EthanG.jpg", "indice1": "2e année", "indice2": "PHOT" },
+        { "id": 5, "nom": "Gwenael BAZILE", "chemin": "pieds/photos/Gwenael.jpg", "indice1": "3e année", "indice2": "INFO" },
+        { "id": 6, "nom": "Jules GOBILLOT", "chemin": "pieds/photos/JulesG.jpg", "indice1": "3e année", "indice2": "INFO" },
+        { "id": 7, "nom": "Gabin BEAUFORT", "chemin": "pieds/photos/GabinB.jpg", "indice1": "3e année", "indice2": "PHOT" },
+        { "id": 8, "nom": "Guirec CHEVREL", "chemin": "pieds/photos/GuirecC.jpg", "indice1": "2e année", "indice2": "INFO" }
     ]
 }

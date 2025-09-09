@@ -157,6 +157,10 @@ app.get('/pieds/random', (req, res) => {
   if (pied.indice1) {
     piedAvecUrl.indice = pied.indice1;
   }
+  // Ajoute l'indice2 si présent
+  if (pied.indice2) {
+    piedAvecUrl.indice2 = pied.indice2;
+  }
   res.json(piedAvecUrl);
 });
 

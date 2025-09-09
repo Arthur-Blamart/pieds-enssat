@@ -11,7 +11,9 @@ function App() {
   const [photoUrl, setPhotoUrl] = useState(null);
   const [prenom, setPrenom] = useState("");
   const [indice, setIndice] = useState("");
+  const [indice2, setIndice2] = useState("");
   const [showIndice, setShowIndice] = useState(false);
+  const [showIndice2, setShowIndice2] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,13 +22,15 @@ function App() {
     setLoading(true);
     setMessage("");
     setAnswer("");
-    setShowIndice(false);
+  setShowIndice(false);
+  setShowIndice2(false);
     try {
       const res = await fetch("https://pieds-enssat.onrender.com/pieds/random");
       const data = await res.json();
-      setPhotoUrl(data.url_image);
-      setPrenom(data.nom.split(" ")[0].toLowerCase());
-      setIndice(data.indice || "");
+  setPhotoUrl(data.url_image);
+  setPrenom(data.nom.split(" ")[0].toLowerCase());
+  setIndice(data.indice || "");
+  setIndice2(data.indice2 || "");
     } catch (e) {
       setMessage("Erreur lors du chargement de la photo.");
     }
@@ -89,7 +93,7 @@ function App() {
           </div>
           {/* Panneau indice à droite */}
           <div style={{ minWidth: "220px", marginLeft: "2rem", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-            <div style={{ background: "#fff", borderRadius: "16px", boxShadow: "0 2px 8px rgba(191,162,76,0.15)", padding: "1rem", minWidth: "180px", minHeight: "80px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ background: "#bfa24c", color: "#111", borderRadius: "16px", boxShadow: "0 2px 8px rgba(191,162,76,0.15)", padding: "1rem", minWidth: "180px", minHeight: "80px", display: "flex", flexDirection: "column", alignItems: "center" }}>
               <button
                 style={{ marginBottom: "0.5rem", padding: "0.5rem 1.2rem", fontSize: "1.05rem", borderRadius: "8px", background: "#5c6f6f", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold", width: "100%" }}
                 onClick={() => {
@@ -101,10 +105,26 @@ function App() {
               >
                 {showIndice ? "Indice révélé" : "Révéler l'indice"}
               </button>
+              <button
+                style={{ marginBottom: "0.5rem", padding: "0.5rem 1.2rem", fontSize: "1.05rem", borderRadius: "8px", background: "#5c6f6f", color: "#fff", border: "none", cursor: "pointer", fontWeight: "bold", width: "100%" }}
+                onClick={() => {
+                  if (indice2) {
+                    setShowIndice2(true);
+                  }
+                }}
+                disabled={!indice2}
+              >
+                {showIndice2 ? "2ᵉ indice révélé" : "Révéler le 2ᵉ indice"}
+              </button>
               <div style={{ minHeight: "24px", width: "100%", textAlign: "center" }}>
                 {showIndice && indice && (
-                  <div style={{ margin: "10px 0 0 0", fontWeight: "bold", fontSize: "1.1rem", color: "#bfa24c" }}>
+                  <div style={{ margin: "10px 0 0 0", fontWeight: "bold", fontSize: "1.1rem", color: "#111" }}>
                     Indice : {indice}
+                  </div>
+                )}
+                {showIndice2 && indice2 && (
+                  <div style={{ margin: "10px 0 0 0", fontWeight: "bold", fontSize: "1.1rem", color: "#111" }}>
+                    2ᵉ indice : {indice2}
                   </div>
                 )}
               </div>
