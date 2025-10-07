@@ -13,6 +13,10 @@ RUN npm install
 # Copie le reste des fichiers de l'application
 COPY . .
 
+# Ajouter les variables d'environnement au build
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Expose le port utilisé par Vite
 EXPOSE 5173
 

@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from 'react';
 import './App.css';
 
@@ -22,15 +20,17 @@ function App() {
     setLoading(true);
     setMessage("");
     setAnswer("");
-  setShowIndice(false);
-  setShowIndice2(false);
+    setShowIndice(false);
+    setShowIndice2(false);
     try {
-      const res = await fetch("https://pieds-enssat.onrender.com/pieds/random");
+      // Utilise la variable d'environnement ou l'URL de production par défaut
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/pieds/random`);
       const data = await res.json();
-  setPhotoUrl(data.url_image);
-  setPrenom(data.nom.split(" ")[0].toLowerCase());
-  setIndice(data.indice || "");
-  setIndice2(data.indice2 || "");
+      setPhotoUrl(data.url_image);
+      setPrenom(data.nom.split(" ")[0].toLowerCase());
+      setIndice(data.indice || "");
+      setIndice2(data.indice2 || "");
     } catch (e) {
       setMessage("Erreur lors du chargement de la photo.");
     }

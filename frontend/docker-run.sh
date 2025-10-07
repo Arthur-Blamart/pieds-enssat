@@ -1,0 +1,1 @@
+sudo docker run -p 5173:5173 pieds-frontend
